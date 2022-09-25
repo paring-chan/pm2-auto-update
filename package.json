@@ -7,11 +7,12 @@
     "@types/node": "^18.7.21",
     "@types/prettier": "^2",
     "prettier": "^2.7.1",
+    "rimraf": "^3.0.2",
     "typescript": "^4.8.3"
   },
   "scripts": {
     "dev": "tsc -w",
-    "prepack": "yarn build",
+    "prepack": "rimraf dist && yarn build",
     "build": "tsc"
   },
   "type": "module",
