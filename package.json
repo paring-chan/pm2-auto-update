@@ -1,5 +1,5 @@
 {
-  "name": "pm2-auto-update",
+  "name": "@pikokr/pm2-auto-update",
   "version": "1.0.0",
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^3.3.0",
