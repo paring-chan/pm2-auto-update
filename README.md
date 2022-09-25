@@ -3,17 +3,10 @@
 ## Installation
 
 ```bash
-git clone https://github.com/pikokr/pm2-auto-update
+pm2 set @pikokr/pm2-auto-update:port 9876 # You can use other port
+pm2 set @pikokr/pm2-auto-update:secret abcdef # Use a stronger secret
 
-cd pm2-auto-update
-
-yarn
-yarn build
-
-pm2 set pm2-auto-update:port 9876 # You can use other port
-pm2 set pm2-auto-update:secret abcdef # Use a stronger secret
-
-pm2 install .
+pm2 install @pikokr/pm2-auto-update
 ```
 
 Then, go to the webhook settings and set the following fields:
