@@ -146,6 +146,17 @@ server.post('/', async (req, reply) => {
             }
           }
 
+          if (pkgJson && pkgJson.scripts?.autoUpdateBuild) {
+            console.log('build script detected. running...')
+            const buildScript = pkgJson.scripts?.autoUpdateBuild
+            const buildOutput = await execAsync(buildScript, { cwd: p.path })
+
+            Console.log(buildOutput.stdout.trim())
+            if (buildOutput.stderr.trim()) {
+              console.error(buildOutput.stderr.trim())
+            }
+          }
+
           console.log(`Successfully pulled process ${p.id}. Reloading...`)
 
           await reloadAsync(p.id)
