@@ -146,14 +146,17 @@ server.post('/', async (req, reply) => {
             }
           }
 
-          if (pkgJson && pkgJson.scripts?.autoUpdateBuild) {
-            console.log('build script detected. running...')
-            const buildScript = pkgJson.scripts?.autoUpdateBuild
-            const buildOutput = await execAsync(buildScript, { cwd: p.path })
+          if (pkgJson2) {
+            const pkgJsonParsed = JSON.parse(pkgJson2)
+            const buildScript = pkgJsonParsed.scripts?.autoUpdateBuild
+            if (buildScript) {
+              console.log('build script detected. running...')
+              const buildOutput = await execAsync(buildScript, { cwd: p.path })
 
-            Console.log(buildOutput.stdout.trim())
-            if (buildOutput.stderr.trim()) {
-              console.error(buildOutput.stderr.trim())
+              console.log(buildOutput.stdout.trim())
+              if (buildOutput.stderr.trim()) {
+                console.error(buildOutput.stderr.trim())
+              }
             }
           }
 
