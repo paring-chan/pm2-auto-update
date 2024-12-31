@@ -55,8 +55,6 @@ server.post('/', async (req, reply) => {
     }
 
     if ('ref' in ev && 'before' in ev) {
-      const repo = ev.repository
-
       const processes = (
         await new Promise<pm2.ProcessDescription[]>((resolve, reject) => {
           pm2.list((err, value) => {
@@ -74,18 +72,28 @@ server.post('/', async (req, reply) => {
         }
       })
 
-      const repoUrl = new URL(repo.git_url)
-
-      const reg = /^\/(.+).git$/
-
-      const repoName = repoUrl.pathname.match(reg)?.[1]
-
       const toReload = (
         await Promise.all(
           processes.map(async (x) => {
             try {
-              if (x.url !== ev.repository.clone_url) return null
-              if (x.rev === ev.head_commit?.id) return null
+              const urls = [
+                ev.repository.git_url,
+                ev.repository.ssh_url,
+                ev.repository.clone_url,
+                ev.repository.svn_url,
+              ]
+              if (!urls.includes(x.url)) {
+                console.debug(
+                  `Skipping ${x.url}: url does not match with webhook(${urls.join(', ')})`,
+                )
+                return null
+              }
+              if (x.rev === ev.head_commit?.id) {
+                console.debug(
+                  `Skipping ${x.url}: rev not changed (current: ${x.rev}, in webhook: ${ev.head_commit?.id})`,
+                )
+                return null
+              }
               return { id: x.id, path: x.cwd }
             } catch (e) {
               return null
