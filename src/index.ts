@@ -69,8 +69,8 @@ server.post('/', async (req, reply) => {
         return {
           id: x.pm_id,
           cwd: x.pm2_env?.pm_cwd,
-          url: ver.url,
-          rev: ver.revision,
+          url: ver?.url,
+          rev: ver?.revision,
         }
       })
 
