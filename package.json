@@ -2,17 +2,17 @@
   "name": "@pikokr/pm2-auto-update",
   "version": "1.2.0",
   "devDependencies": {
-    "@trivago/prettier-plugin-sort-imports": "^3.3.0",
-    "@types/lodash": "^4.14.185",
-    "@types/node": "^18.7.21",
-    "@types/prettier": "^2",
-    "prettier": "^2.7.1",
-    "rimraf": "^3.0.2",
-    "typescript": "^4.8.3"
+    "@trivago/prettier-plugin-sort-imports": "^5.2.0",
+    "@types/lodash": "^4.17.13",
+    "@types/node": "^22.10.2",
+    "@types/prettier": "^3.0.0",
+    "prettier": "^3.4.2",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.7.2"
   },
   "scripts": {
     "dev": "tsc -w",
-    "prepack": "rimraf dist && yarn build",
+    "prepack": "rimraf dist && pnpm build",
     "build": "tsc"
   },
   "type": "module",
@@ -24,15 +24,16 @@
     }
   ],
   "dependencies": {
-    "@octokit/webhooks": "^10.1.5",
-    "@octokit/webhooks-types": "^6.3.6",
-    "@pm2/io": "^5.0.0",
-    "fastify": "^4.6.0",
-    "fastify-raw-body": "^4.1.0",
+    "@octokit/webhooks": "^13.4.1",
+    "@octokit/webhooks-types": "^7.6.1",
+    "@pm2/io": "^6.1.0",
+    "fastify": "^5.2.0",
+    "fastify-raw-body": "^5.0.0",
     "lodash": "^4.17.21",
-    "pm2": "^5.2.0"
+    "pm2": "^5.4.3"
   },
   "files": [
     "dist"
-  ]
+  ],
+  "packageManager": "pnpm@9.11.0+sha1.4cd20e68438613738e8f2bc9aece61eaa6b3e649"
 }

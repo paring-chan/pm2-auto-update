@@ -35,7 +35,7 @@ const urlScript = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
   '..',
   'scripts',
-  'repo-url.sh'
+  'repo-url.sh',
 )
 
 server.post('/', async (req, reply) => {
@@ -64,7 +64,15 @@ server.post('/', async (req, reply) => {
             resolve(value)
           })
         })
-      ).map((x) => ({ id: x.pm_id, cwd: x.pm2_env?.pm_cwd }))
+      ).map((x) => {
+        const ver = (x.pm2_env as any)?.versioning
+        return {
+          id: x.pm_id,
+          cwd: x.pm2_env?.pm_cwd,
+          url: ver.url,
+          rev: ver.revision,
+        }
+      })
 
       const repoUrl = new URL(repo.git_url)
 
@@ -76,35 +84,13 @@ server.post('/', async (req, reply) => {
         await Promise.all(
           processes.map(async (x) => {
             try {
-              const [urlStr, refStr] = (await execAsync(`bash ${urlScript}`, { cwd: x.cwd })).stdout
-                .trim()
-                .split('\n')
-
-              if (!urlStr) return null
-
-              const url = new URL(urlStr)
-
-              if (url.hostname !== 'github.com') return null
-
-              const curRepo = url.pathname.match(reg)?.[1]
-
-              if (repoName !== curRepo) return null
-
-              const refs = Object.fromEntries(
-                _.chunk(refStr.split(' '), 2).map((x) => x.reverse())
-              ) as Record<string, string>
-
-              const head = refs.HEAD
-
-              if (!head) return null
-
-              if (refs[ev.ref] !== head) return null
-
+              if (x.url !== ev.repository.clone_url) return null
+              if (x.rev === ev.head_commit?.id) return null
               return { id: x.id, path: x.cwd }
             } catch (e) {
               return null
             }
-          })
+          }),
         )
       ).filter((x) => !!x) as unknown[] as { id: string; path: string }[]
 
@@ -179,5 +165,5 @@ console.log(
   `Listening on ${await server.listen({
     host: '0.0.0.0',
     port,
-  })}`
+  })}`,
 )
